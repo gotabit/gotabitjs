@@ -1,6 +1,6 @@
 {
   "name": "gotabit",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A wrapper package for all relevant cosmjs packages.",
   "main": "build/index.js",
   "scripts": {
@@ -18,6 +18,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "build/",
+    "src/"
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/gotabit/gotabitjs/issues"
