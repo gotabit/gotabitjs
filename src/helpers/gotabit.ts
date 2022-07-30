@@ -1,8 +1,8 @@
 import { CosmWasmClient, SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { HdPath, stringToPath, Random } from "@cosmjs/crypto";
+import { HdPath, Random, stringToPath } from "@cosmjs/crypto";
+import { toBech32 } from "@cosmjs/encoding";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { GasPrice, SigningStargateClient, StargateClient } from "@cosmjs/stargate";
-import { toBech32 } from "@cosmjs/encoding";
 
 /**
  * interface chainConfig
@@ -38,7 +38,7 @@ const defaultGasPrice = "2500ugtb";
 /**
  * type chainConfig
  */
- export type ConfigType = "local" | "test" | "main";
+export type ConfigType = "local" | "test" | "main";
 
 /**
  * enum chainConfig
@@ -108,7 +108,7 @@ export class GotaBit {
 
   /**
    * GotaBit class init methods
-   * @param chainConfig 
+   * @param chainConfig
    */
   public static async init(chainConfig: ConfigType): Promise<GotaBit>;
   public static async init(chainConfig: Config): Promise<GotaBit>;
@@ -127,7 +127,7 @@ export class GotaBit {
     const config = this.getChainConfig(chainConfig);
     const _options = this.getOptions(option);
     const _wallet = await this.getWallet(wallet, _options);
-    
+
     const mnemonic = typeof wallet === "string" ? wallet : "";
 
     return new GotaBit(config, _wallet, mnemonic, _options);
@@ -209,7 +209,7 @@ export class GotaBit {
   }
 
   public async client(signing?: boolean): Promise<any> {
-    var client;
+    let client;
 
     if (signing && this.wallet !== null) {
       client = await (SigningStargateClient.connectWithSigner as unknown as any)(
@@ -234,7 +234,7 @@ export class GotaBit {
   }
 
   public async wasmClient(signing?: boolean): Promise<any> {
-    var client;
+    let client;
     if (signing && this.wallet !== null) {
       client = await (SigningCosmWasmClient.connectWithSigner as unknown as any)(
         this.config.rpc,
