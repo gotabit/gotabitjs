@@ -1,6 +1,6 @@
 {
   "name": "gotabit",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A wrapper package for all relevant cosmjs packages.",
   "main": "build/index.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "build": "rm -rf ./build && tsc",
     "lint": "eslint --max-warnings 0 \"./src/**/*.ts\"",
     "pack": "rm -rf ./dist && npx webpack",
+    "clean": "rm -rf ./dist && rm -rf ./build",
     "npmrc": "echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > .npmrc"
   },
   "repository": {

@@ -3,7 +3,7 @@
  */
 
 // Helpers
-export { GotaBit, localConfig, testnetConfig, walletOptoions } from "./helpers/gotabit";
+export { GotaBit } from "./helpers/gotabit";
 export { setupNodeLedger, setupNodeLocal, setupWebKeplr, setupWebLedger } from "./helpers/setup";
 export { Buffer } from "buffer";
 export { decrypt, encrypt, PrivateKey } from "eciesjs";
