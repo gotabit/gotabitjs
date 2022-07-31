@@ -33,7 +33,7 @@ const defaultPrefix = "gio";
 
 const defaultHdPath = "m/44'/118'/0'/0/0";
 
-const defaultGasPrice = "2500ugtb";
+const defaultGasPrice = "0.0025ugtb";
 
 /**
  * type chainConfig
