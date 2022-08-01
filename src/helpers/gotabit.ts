@@ -17,6 +17,30 @@ export interface Config {
   gasAdjustment: number;
 }
 
+<<<<<<< HEAD
+=======
+const localConfig = {
+  rpc: "http://localhost:26657",
+  chainId: "gotabit-local",
+};
+
+const testConfig = {
+  rpc: "https://rpc.testnet.gotabit.dev:443",
+  chainId: "gotabit-test-1",
+};
+
+const mainConfig = {
+  rpc: "https://rpc.gotabit.dev:443",
+  chainId: "gotabit-alpha",
+};
+
+const defaultPrefix = "gio";
+
+const defaultHdPath = "m/44'/118'/0'/0/0";
+
+const defaultGasPrice = "0.0025ugtb";
+
+>>>>>>> 5c41c59e1f4263126f5e49c7ad012d6aabde375c
 /**
  * type chainConfig
  */
