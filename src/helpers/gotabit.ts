@@ -5,7 +5,7 @@ import { toBech32 } from "@cosmjs/encoding";
 import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { GasPrice, SigningStargateClient, StargateClient } from "@cosmjs/stargate";
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 /**
  * interface chainConfig
@@ -87,16 +87,37 @@ export enum ClientTypeEnum {
 const localConfig = {
   rpc: "http://localhost:26657",
   chainId: "gotabit-local",
+  rest: "http://localhost:1317",
+  coinType: 118,
+  coinDenom: "GTB",
+  coinDecimals: 6,
+  coinMinimalDenom: "ugtb",
+  coinGeckoId: "gotabit",
+  gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
 };
 
 const testConfig = {
   rpc: "https://rpc.testnet.gotabit.dev:443",
   chainId: "gotabit-test-1",
+  rest: "http://rest.testnet.gotabit.dev:1317",
+  coinType: 118,
+  coinDenom: "GTB",
+  coinDecimals: 6,
+  coinMinimalDenom: "ugtb",
+  coinGeckoId: "gotabit",
+  gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
 };
 
 const mainConfig = {
   rpc: "https://rpc.gotabit.dev:443",
   chainId: "gotabit-alpha",
+  rest: "http://rest.gotabit.dev:1317",
+  coinType: 118,
+  coinDenom: "GTB",
+  coinDecimals: 6,
+  coinMinimalDenom: "ugtb",
+  coinGeckoId: "gotabit",
+  gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
 };
 
 const defaultPrefix = "gio";
@@ -253,7 +274,6 @@ export class GotaBit {
 
           break;
         case ClientTypeEnum.ClientLedgerExt:
-
           // Setup signer
           _wallet = new LedgerSigner(wallet.transport, {
             hdPaths: [makeCosmoshubPath(0)],
@@ -287,7 +307,7 @@ export class GotaBit {
    * @param signing
    * @param wasm
    */
-  public async client(signing = false , wasm = false): Promise<any> {
+  public async client(signing = false, wasm = false): Promise<any> {
     return (wasm ? this.wasmClient : this.stargateClient)(signing);
   }
 
