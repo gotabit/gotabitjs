@@ -1,0 +1,19 @@
+{
+  "name": "sdk",
+  "version": "1.0.0",
+  "main": "sdk.js",
+  "bin": {
+    "hello": "sdk.js"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "description": "",
+  "dependencies": {
+    "gotabit": "^1.0.6"
+  }
+}

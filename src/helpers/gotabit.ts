@@ -1,8 +1,11 @@
+import { makeCosmoshubPath } from "@cosmjs/amino";
 import { CosmWasmClient, SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { HdPath, Random, stringToPath } from "@cosmjs/crypto";
 import { toBech32 } from "@cosmjs/encoding";
+import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { GasPrice, SigningStargateClient, StargateClient } from "@cosmjs/stargate";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
 
 /**
  * interface chainConfig
@@ -13,27 +16,6 @@ export interface Config {
   gasPrices: GasPrice | string;
   gasAdjustment: number;
 }
-
-const localConfig = {
-  rpc: "http://localhost:26657",
-  chainId: "gotabit-local",
-};
-
-const testConfig = {
-  rpc: "https://rpc.testnet.gotabit.dev:443",
-  chainId: "gotabit-test-1",
-};
-
-const mainConfig = {
-  rpc: "https://rpc.gotabit.dev:443",
-  chainId: "gotabit-alpha",
-};
-
-const defaultPrefix = "gio";
-
-const defaultHdPath = "m/44'/118'/0'/0/0";
-
-const defaultGasPrice = "2500ugtb";
 
 /**
  * type chainConfig
@@ -53,11 +35,18 @@ export enum ConfigTypelEnum {
 }
 
 /**
+ * Window has to be re-declared to get keplr working
+ */
+declare const window: any;
+
+/**
  * interface Wallet
  */
 export interface Wallet {
+  type: ClientType;
   key: string;
   password: string;
+  transport: any;
 }
 
 /**
@@ -80,15 +69,51 @@ export interface MainWalletOptoions {
 
 export type WalletGenerateLength = 12 | 15 | 18 | 21 | 24;
 
+/**
+ * client type
+ */
+export type ClientType = "password" | "keplr" | "ledger" | "ledger-ext";
+
+/**
+ * enum chainConfig
+ */
+export enum ClientTypeEnum {
+  ClientPassword = "password",
+  ClientKeplr = "keplr",
+  ClientLedger = "ledger",
+  ClientLedgerExt = "ledger-ext",
+}
+
+const localConfig = {
+  rpc: "http://localhost:26657",
+  chainId: "gotabit-local",
+};
+
+const testConfig = {
+  rpc: "https://rpc.testnet.gotabit.dev:443",
+  chainId: "gotabit-test-1",
+};
+
+const mainConfig = {
+  rpc: "https://rpc.gotabit.dev:443",
+  chainId: "gotabit-alpha",
+};
+
+const defaultPrefix = "gio";
+
+const defaultHdPath = "m/44'/118'/0'/0/0";
+
+const defaultGasPrice = "0.0025ugtb";
+
 export class GotaBit {
-  public wallet: DirectSecp256k1HdWallet | null;
+  public wallet: DirectSecp256k1HdWallet | LedgerSigner | null;
   public walletOptoions: WalletOptoions;
   public mnemonic: string;
   public config: Config;
 
   private constructor(
     config: Config,
-    wallet: DirectSecp256k1HdWallet | null,
+    wallet: DirectSecp256k1HdWallet | LedgerSigner | null,
     mnemonic: string,
     walletOptoions: WalletOptoions,
   ) {
@@ -126,7 +151,7 @@ export class GotaBit {
   ): Promise<GotaBit> {
     const config = this.getChainConfig(chainConfig);
     const _options = this.getOptions(option);
-    const _wallet = await this.getWallet(wallet, _options);
+    const _wallet = await this.getWallet(config, _options, wallet);
 
     const mnemonic = typeof wallet === "string" ? wallet : "";
 
@@ -172,23 +197,72 @@ export class GotaBit {
   }
 
   /**
-   * Get Wallet
-   * @param wallet
+   Get Wallet
+   * @param config
    * @param option
-   * @returns
+   * @param wallet
+   * @private
    */
   private static async getWallet(
+    config: Config,
+    option: MainWalletOptoions,
     wallet?: string | WalletGenerateLength | Wallet | null,
-    option?: any,
-  ): Promise<DirectSecp256k1HdWallet | null> {
-    let _wallet: DirectSecp256k1HdWallet | null = null;
+  ): Promise<DirectSecp256k1HdWallet | LedgerSigner | null> {
+    const interactiveTimeout = 120_000;
+    const { prefix } = option;
+    let _wallet: DirectSecp256k1HdWallet | LedgerSigner | null = null;
+
     if (typeof wallet === "number") {
       _wallet = await DirectSecp256k1HdWallet.generate(wallet, option);
     } else if (typeof wallet === "string") {
       _wallet = await DirectSecp256k1HdWallet.fromMnemonic(wallet, option);
-    } else if (typeof wallet === "object") {
-      if (wallet?.key && wallet?.password) {
-        _wallet = await DirectSecp256k1HdWallet.deserialize(wallet.key, wallet.password);
+    } else if (typeof wallet === "object" && wallet) {
+      const { type } = wallet;
+      switch (type) {
+        case ClientTypeEnum.ClientPassword:
+          if (!wallet?.key && !wallet?.password) {
+            throw new Error("Wallet key and wallet password cannot be empty!");
+          }
+          _wallet = await DirectSecp256k1HdWallet.deserialize(wallet.key, wallet.password);
+
+          break;
+        case ClientTypeEnum.ClientKeplr:
+          if (!window.keplr) {
+            throw new Error("Keplr is not supported or installed on this browser!");
+          }
+
+          // try to enable keplr with given chainId
+          await window.keplr.enable(config.chainId).catch(() => {
+            throw new Error("Keplr can't connect to this chainId!");
+          });
+
+          // Setup signer
+          _wallet = await window.getOfflineSignerAuto(config.chainId);
+
+          break;
+        case ClientTypeEnum.ClientLedger:
+          // Prepare ledger
+          // eslint-disable-next-line no-case-declarations
+          const ledgerTransportWeb = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
+
+          // Setup signer
+          _wallet = new LedgerSigner(ledgerTransportWeb, {
+            hdPaths: [makeCosmoshubPath(0)],
+            prefix,
+          });
+
+          break;
+        case ClientTypeEnum.ClientLedgerExt:
+
+          // Setup signer
+          _wallet = new LedgerSigner(wallet.transport, {
+            hdPaths: [makeCosmoshubPath(0)],
+            prefix,
+          });
+          break;
+
+        default:
+          break;
       }
     }
     return _wallet;
@@ -208,7 +282,16 @@ export class GotaBit {
     return option === null ? Object.assign(mainWalletOptoions, { option }) : mainWalletOptoions;
   }
 
-  public async client(signing?: boolean): Promise<any> {
+  /**
+   * Returns the client of the corresponding type
+   * @param signing
+   * @param wasm
+   */
+  public async client(signing = false , wasm = false): Promise<any> {
+    return (wasm ? this.wasmClient : this.stargateClient)(signing);
+  }
+
+  private async stargateClient(signing?: boolean): Promise<any> {
     let client;
 
     if (signing && this.wallet !== null) {
@@ -233,7 +316,7 @@ export class GotaBit {
     return client;
   }
 
-  public async wasmClient(signing?: boolean): Promise<any> {
+  private async wasmClient(signing?: boolean): Promise<any> {
     let client;
     if (signing && this.wallet !== null) {
       client = await (SigningCosmWasmClient.connectWithSigner as unknown as any)(

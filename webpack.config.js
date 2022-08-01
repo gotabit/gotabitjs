@@ -55,13 +55,4 @@ const webConfig = {
   ],
 };
 
-const nodeConfig = {
-  ...commonConfig,
-  target: "node",
-  output: {
-    libraryTarget: "commonjs",
-    filename: "bundle.node.js",
-  },
-};
-
-module.exports = [webConfig, nodeConfig];
+module.exports = [webConfig];

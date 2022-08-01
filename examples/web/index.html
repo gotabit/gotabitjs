@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Web site created using create-snowpack-app"
+    />
+    <script crossorigin src="../../dist/bundle.js"></script>
+    <style>
+      section {
+        width: 800px;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        padding: 0.5em;
+      }
+
+      button {
+        padding: 1em;
+      }
+    </style>
+    <title>Gotabit JS SDK exmaples.</title>
+  </head>
+  <body>
+    <section>
+      <h1>Gotabit JS SDK exmaples.</h1>
+      <h2>For Ledger</h2>
+      <ol>
+        <li>Connect the Ledger device via USB</li>
+        <li>Open the Cosmos app on the Ledger device</li>
+        <li>Click the buttons below</li>
+      </ol>
+      <button
+        onclick="connectWallet('ledger').then((gotabit) => {window.gotabit = gotabit;})"
+      >
+        ledgerConnect
+      </button>
+
+      <h2>For Keplr</h2>
+      <ol>
+        <li>Click the buttons below</li>
+      </ol>
+      <button
+        onclick="connectWallet('keplr').then((gotabit) => {window.gotabit = gotabit; })"
+      >
+        KeplrConnect
+      </button>
+      <hr />
+      <div id="connect">Connect Result:</div>
+      <hr />
+      <h2>Accounts</h2>
+      <button onclick="getAccounts(window.gotabit)">Get Accounts</button>
+      <div id="accounts"></div>
+    </section>
+    <script>
+      window.addEventListener("load", (event) => {
+        const { GotaBit } = GotaBitJS;
+
+        window.connectWallet = async function (type) {
+          const connectDiv = document.getElementById("connect");
+          connectDiv.textContent = "Loading...";
+          let gotabit;
+          try {
+            const wallet = {
+              type: type,
+            };
+            gotabit = await GotaBit.init("main", wallet);
+
+            connectDiv.textContent = JSON.stringify(gotabit, 2, "\n");
+          } catch (error) {
+            console.error(error);
+            connectDiv.textContent = error;
+          }
+
+          return gotabit;
+        };
+
+        window.getAccounts = async function (gotabit) {
+          const accountsDiv = document.getElementById("accounts");
+          accountsDiv.textContent = "Loading...";
+
+          try {
+            accounts = await gotabit.wallet.getAccounts();
+            accountsDiv.textContent = JSON.stringify(accounts, 2, "\n");
+          } catch (error) {
+            console.error(error);
+            accountsDiv.textContent = error;
+          }
+        };
+      });
+    </script>
+  </body>
+</html>
