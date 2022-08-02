@@ -130,4 +130,4 @@ export {
 // @cosmjs/utils
 export { isNonNullObject } from "@cosmjs/utils";
 /*
-*/
+ */
