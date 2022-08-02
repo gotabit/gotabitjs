@@ -1,88 +1,26 @@
 import { makeCosmoshubPath } from "@cosmjs/amino";
 import { CosmWasmClient, SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { HdPath, Random, stringToPath } from "@cosmjs/crypto";
+import { Random, stringToPath } from "@cosmjs/crypto";
 import { toBech32 } from "@cosmjs/encoding";
 import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { GasPrice, SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
-/**
- * interface chainConfig
- */
-export interface Config {
-  rpc: string;
-  chainId: string;
-  gasPrices: GasPrice | string;
-  gasAdjustment: number;
-}
-
-/**
- * type chainConfig
- */
-export type ConfigType = "local" | "test" | "main";
-
-/**
- * enum chainConfig
- */
-export enum ConfigTypelEnum {
-  /** Local Environment */
-  ConfigLocal = "local",
-  /** Test Environment */
-  ConfigTest = "test",
-  /** Main Environment */
-  ConfigMain = "main",
-}
+import {
+  ClientTypeEnum,
+  Config,
+  ConfigType,
+  ConfigTypelEnum,
+  Wallet,
+  WalletGenerateLength,
+  WalletOptoions,
+} from "./gotabit.types";
 
 /**
  * Window has to be re-declared to get keplr working
  */
 declare const window: any;
-
-/**
- * interface Wallet
- */
-export interface Wallet {
-  type: ClientType;
-  key: string;
-  password: string;
-  transport: any;
-}
-
-/**
- * The number of words in the mnemonic (12, 15, 18, 21 or 24).
- */
-export interface WalletOptoions {
-  bip39Password: string;
-  hdPaths: HdPath[];
-  prefix: string;
-}
-
-/**
- * interface option
- */
-export interface MainWalletOptoions {
-  bip39Password: string;
-  hdPaths: HdPath[];
-  prefix: string;
-}
-
-export type WalletGenerateLength = 12 | 15 | 18 | 21 | 24;
-
-/**
- * client type
- */
-export type ClientType = "password" | "keplr" | "ledger" | "ledger-ext";
-
-/**
- * enum chainConfig
- */
-export enum ClientTypeEnum {
-  ClientPassword = "password",
-  ClientKeplr = "keplr",
-  ClientLedger = "ledger",
-  ClientLedgerExt = "ledger-ext",
-}
 
 const localConfig = {
   rpc: "http://localhost:26657",
@@ -168,7 +106,7 @@ export class GotaBit {
   public static async init(
     chainConfig: ConfigType | Config,
     wallet?: string | WalletGenerateLength | Wallet | null,
-    option?: Partial<MainWalletOptoions> | null,
+    option?: Partial<WalletOptoions> | null,
   ): Promise<GotaBit> {
     const config = this.getChainConfig(chainConfig);
     const _options = this.getOptions(option);
@@ -218,7 +156,7 @@ export class GotaBit {
   }
 
   /**
-   Get Wallet
+   * Get Wallet
    * @param config
    * @param option
    * @param wallet
@@ -226,7 +164,7 @@ export class GotaBit {
    */
   private static async getWallet(
     config: Config,
-    option: MainWalletOptoions,
+    option: WalletOptoions,
     wallet?: string | WalletGenerateLength | Wallet | null,
   ): Promise<DirectSecp256k1HdWallet | LedgerSigner | null> {
     const interactiveTimeout = 120_000;
@@ -293,7 +231,7 @@ export class GotaBit {
    * @param option
    * @returns
    */
-  private static getOptions(option?: Partial<MainWalletOptoions> | null): MainWalletOptoions {
+  private static getOptions(option?: Partial<WalletOptoions> | null): WalletOptoions {
     const mainWalletOptoions = {
       bip39Password: "",
       hdPaths: [stringToPath(defaultHdPath)],
