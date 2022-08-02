@@ -22,9 +22,10 @@ import {
  */
 declare const window: any;
 
-const localConfig = {
+const localConfig: Config = {
   rpc: "http://localhost:26657",
   chainId: "gotabit-local",
+  chainName: "GotaBit-local",
   rest: "http://localhost:1317",
   coinType: 118,
   coinDenom: "GTB",
@@ -32,11 +33,14 @@ const localConfig = {
   coinMinimalDenom: "ugtb",
   coinGeckoId: "gotabit",
   gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
+  gasPrices: "",
+  gasAdjustment: 0,
 };
 
-const testConfig = {
+const testConfig: Config = {
   rpc: "https://rpc.testnet.gotabit.dev:443",
   chainId: "gotabit-test-1",
+  chainName: "GotaBit-test",
   rest: "http://rest.testnet.gotabit.dev:1317",
   coinType: 118,
   coinDenom: "GTB",
@@ -44,11 +48,14 @@ const testConfig = {
   coinMinimalDenom: "ugtb",
   coinGeckoId: "gotabit",
   gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
+  gasPrices: "",
+  gasAdjustment: 0,
 };
 
-const mainConfig = {
+const mainConfig: Config = {
   rpc: "https://rpc.gotabit.dev:443",
   chainId: "gotabit-alpha",
+  chainName: "GotaBit",
   rest: "http://rest.gotabit.dev:1317",
   coinType: 118,
   coinDenom: "GTB",
@@ -56,6 +63,8 @@ const mainConfig = {
   coinMinimalDenom: "ugtb",
   coinGeckoId: "gotabit",
   gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
+  gasPrices: "",
+  gasAdjustment: 0,
 };
 
 const defaultPrefix = "gio";
@@ -123,36 +132,36 @@ export class GotaBit {
    * @returns
    */
   private static getChainConfig(chainConfig: ConfigType | Config): Config {
-    const getEnvRpc = (env: ConfigType, type: "rpc" | "chainId"): string => {
-      let _rpc = testConfig.rpc;
-      let _chainId = testConfig.chainId;
-      switch (env) {
+    /**
+     * If the type is "local" | "test" | "main"
+     * return the defined environment variable
+     * @param type
+     * @returns
+     */
+    const getEnvObject = (type: ConfigType): Config => {
+      let currentValue = testConfig;
+      switch (type) {
         case ConfigTypelEnum.ConfigLocal:
-          _rpc = localConfig.rpc;
-          _chainId = localConfig.chainId;
+          currentValue = localConfig;
           break;
         case ConfigTypelEnum.ConfigTest:
-          _rpc = testConfig.rpc;
-          _chainId = testConfig.chainId;
+          currentValue = testConfig;
           break;
         case ConfigTypelEnum.ConfigMain:
-          _rpc = mainConfig.rpc;
-          _chainId = mainConfig.chainId;
+          currentValue = mainConfig;
           break;
       }
-      return type === "rpc" ? _rpc : _chainId;
+
+      return currentValue;
     };
 
-    return {
-      rpc:
-        typeof chainConfig === "string" ? getEnvRpc(chainConfig, "rpc") : chainConfig.rpc || testConfig.rpc,
-      chainId:
-        typeof chainConfig === "string"
-          ? getEnvRpc(chainConfig, "chainId")
-          : chainConfig.chainId || testConfig.chainId,
-      gasPrices: GasPrice.fromString(((chainConfig as Config)?.gasPrices as string) || defaultGasPrice),
-      gasAdjustment: (chainConfig as Config).gasAdjustment || 0,
-    };
+    const customFormats =
+      typeof chainConfig === "string" ? getEnvObject(chainConfig) : Object.assign(testConfig, chainConfig);
+
+    customFormats.gasPrices = GasPrice.fromString(
+      ((chainConfig as Config)?.gasPrices as string) || defaultGasPrice,
+    );
+    return customFormats;
   }
 
   /**
@@ -247,6 +256,68 @@ export class GotaBit {
    */
   public async client(signing = false, wasm = false): Promise<any> {
     return (wasm ? this.wasmClient : this.stargateClient)(signing);
+  }
+
+  public async keplrSuggest(): Promise<void> {
+    const {
+      chainId,
+      chainName,
+      rpc,
+      rest,
+      coinType,
+      coinDenom,
+      coinMinimalDenom,
+      coinDecimals,
+      coinGeckoId,
+      gasPriceStep: { low, average, high },
+    } = this.config;
+
+    const { prefix } = this.walletOptoions;
+
+    await window.keplr.experimentalSuggestChain({
+      chainId,
+      chainName,
+      rpc,
+      rest,
+      bip44: {
+        coinType,
+      },
+      bech32Config: {
+        bech32PrefixAccAddr: prefix,
+        bech32PrefixAccPub: prefix + "pub",
+        bech32PrefixValAddr: prefix + "valoper",
+        bech32PrefixValPub: prefix + "valoperpub",
+        bech32PrefixConsAddr: prefix + "valcons",
+        bech32PrefixConsPub: prefix + "valconspub",
+      },
+      currencies: [
+        {
+          coinDenom,
+          coinMinimalDenom,
+          coinDecimals,
+          coinGeckoId,
+        },
+      ],
+      feeCurrencies: [
+        {
+          coinDenom,
+          coinMinimalDenom,
+          coinDecimals,
+          coinGeckoId,
+        },
+      ],
+      stakeCurrency: {
+        coinDenom,
+        coinMinimalDenom,
+        coinDecimals,
+        coinGeckoId,
+      },
+      gasPriceStep: {
+        low,
+        average,
+        high,
+      },
+    });
   }
 
   private async stargateClient(signing?: boolean): Promise<any> {

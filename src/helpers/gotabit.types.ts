@@ -9,6 +9,19 @@ export interface Config {
   chainId: string;
   gasPrices: GasPrice | string;
   gasAdjustment: number;
+
+  rest: string;
+  coinType: number;
+  chainName: string;
+  coinDenom: string;
+  coinDecimals: number;
+  coinMinimalDenom: string;
+  coinGeckoId: string;
+  gasPriceStep: {
+    low: number;
+    average: number;
+    high: number;
+  };
 }
 
 /**
