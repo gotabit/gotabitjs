@@ -199,6 +199,8 @@ export class GotaBit {
             throw new Error("Keplr is not supported or installed on this browser!");
           }
 
+          await this.keplrSuggest(config, option);
+
           // try to enable keplr with given chainId
           await window.keplr.enable(config.chainId).catch(() => {
             throw new Error("Keplr can't connect to this chainId!");
@@ -258,7 +260,7 @@ export class GotaBit {
     return (wasm ? this.wasmClient : this.stargateClient)(signing);
   }
 
-  public async keplrSuggest(): Promise<void> {
+  private static async keplrSuggest(config: Config, option: WalletOptoions): Promise<void> {
     const {
       chainId,
       chainName,
@@ -270,54 +272,58 @@ export class GotaBit {
       coinDecimals,
       coinGeckoId,
       gasPriceStep: { low, average, high },
-    } = this.config;
+    } = config;
 
-    const { prefix } = this.walletOptoions;
+    const { prefix } = option;
 
-    await window.keplr.experimentalSuggestChain({
-      chainId,
-      chainName,
-      rpc,
-      rest,
-      bip44: {
-        coinType,
-      },
-      bech32Config: {
-        bech32PrefixAccAddr: prefix,
-        bech32PrefixAccPub: prefix + "pub",
-        bech32PrefixValAddr: prefix + "valoper",
-        bech32PrefixValPub: prefix + "valoperpub",
-        bech32PrefixConsAddr: prefix + "valcons",
-        bech32PrefixConsPub: prefix + "valconspub",
-      },
-      currencies: [
-        {
+    await window.keplr
+      .experimentalSuggestChain({
+        chainId,
+        chainName,
+        rpc,
+        rest,
+        bip44: {
+          coinType,
+        },
+        bech32Config: {
+          bech32PrefixAccAddr: prefix,
+          bech32PrefixAccPub: prefix + "pub",
+          bech32PrefixValAddr: prefix + "valoper",
+          bech32PrefixValPub: prefix + "valoperpub",
+          bech32PrefixConsAddr: prefix + "valcons",
+          bech32PrefixConsPub: prefix + "valconspub",
+        },
+        currencies: [
+          {
+            coinDenom,
+            coinMinimalDenom,
+            coinDecimals,
+            coinGeckoId,
+          },
+        ],
+        feeCurrencies: [
+          {
+            coinDenom,
+            coinMinimalDenom,
+            coinDecimals,
+            coinGeckoId,
+          },
+        ],
+        stakeCurrency: {
           coinDenom,
           coinMinimalDenom,
           coinDecimals,
           coinGeckoId,
         },
-      ],
-      feeCurrencies: [
-        {
-          coinDenom,
-          coinMinimalDenom,
-          coinDecimals,
-          coinGeckoId,
+        gasPriceStep: {
+          low,
+          average,
+          high,
         },
-      ],
-      stakeCurrency: {
-        coinDenom,
-        coinMinimalDenom,
-        coinDecimals,
-        coinGeckoId,
-      },
-      gasPriceStep: {
-        low,
-        average,
-        high,
-      },
-    });
+      })
+      .catch(() => {
+        throw new Error("Keplr can't experimentalSuggestChain to this chainId!");
+      });
   }
 
   private async stargateClient(signing?: boolean): Promise<any> {
