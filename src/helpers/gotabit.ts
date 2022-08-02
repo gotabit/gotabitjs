@@ -38,10 +38,10 @@ const localConfig: Config = {
 };
 
 const testConfig: Config = {
-  rpc: "https://rpc.testnet.gotabit.dev:443",
+  rpc: "https://rpc-testnet.gotabit.dev:443",
   chainId: "gotabit-test-1",
   chainName: "GotaBit-test",
-  rest: "https://rest.testnet.gotabit.dev:443",
+  rest: "https://rest-testnet.gotabit.dev:443",
   coinType: 118,
   coinDenom: "GTB",
   coinDecimals: 6,
@@ -257,7 +257,13 @@ export class GotaBit {
    * @param wasm
    */
   public async client(signing = false, wasm = false): Promise<any> {
-    return (wasm ? this.wasmClient : this.stargateClient)(signing);
+    let client;
+    if (wasm) {
+      client = await this.wasmClient(signing);
+    } else {
+      client = await this.stargateClient(signing);
+    }
+    return client;
   }
 
   private static async keplrSuggest(config: Config, option: WalletOptoions): Promise<void> {
