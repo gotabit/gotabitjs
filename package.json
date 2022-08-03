@@ -1,6 +1,6 @@
 {
   "name": "gotabit",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A wrapper package for all relevant cosmjs packages.",
   "main": "build/index.js",
   "scripts": {
@@ -35,10 +35,10 @@
     "@cosmjs/math": "^0.28.11",
     "@cosmjs/utils": "^0.28.11",
     "@gotabit/cosmjs-amino": "^0.28.11",
-    "@gotabit/cosmjs-cosmwasm-stargate": "^0.28.11",
+    "@gotabit/cosmjs-cosmwasm-stargate": "^0.28.11-1",
     "@gotabit/cosmjs-proto-signing": "^0.28.11",
-    "@gotabit/cosmjs-stargate": "^0.28.11",
-    "@ledgerhq/hw-transport-webusb": "^6.27.2",
+    "@gotabit/cosmjs-stargate": "^0.28.11-1",
+    "@ledgerhq/hw-transport": "^6.27.2",
     "eciesjs": "^0.3.15"
   },
   "devDependencies": {

@@ -82,7 +82,7 @@ export type WalletGenerateLength = 12 | 15 | 18 | 21 | 24;
 /**
  * Union type for different possible wallet.
  */
-export type WalletType = "password" | "keplr" | "ledger" | "ledger-ext";
+export type WalletType = "password" | "keplr" | "ledger";
 
 /**
  * Different environment ClientTypeEnum enumerations
@@ -91,5 +91,4 @@ export enum ClientTypeEnum {
   ClientPassword = "password",
   ClientKeplr = "keplr",
   ClientLedger = "ledger",
-  ClientLedgerExt = "ledger-ext",
 }

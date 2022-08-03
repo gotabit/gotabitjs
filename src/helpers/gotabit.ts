@@ -6,7 +6,6 @@ import { CosmWasmClient, SigningCosmWasmClient } from "@gotabit/cosmjs-cosmwasm-
 import { DirectSecp256k1HdWallet } from "@gotabit/cosmjs-proto-signing";
 import { GasPrice, SigningStargateClient, StargateClient } from "@gotabit/cosmjs-stargate";
 import { Window as KeplrWindow } from "@keplr-wallet/types";
-import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 import {
   ClientTypeEnum,
@@ -173,7 +172,6 @@ export class GotaBit {
     option: GotaBitWalletOptoions,
     wallet?: string | WalletGenerateLength | WalletObject | null,
   ): Promise<GotaBitWallet> {
-    const interactiveTimeout = 120_000;
     const { prefix } = option;
     let _wallet: GotaBitWallet = null;
 
@@ -208,18 +206,6 @@ export class GotaBit {
 
           break;
         case ClientTypeEnum.ClientLedger:
-          // Prepare ledger
-          // eslint-disable-next-line no-case-declarations
-          const ledgerTransportWeb = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
-
-          // Setup signer
-          _wallet = new LedgerSigner(ledgerTransportWeb, {
-            hdPaths: [makeCosmoshubPath(0)],
-            prefix,
-          });
-
-          break;
-        case ClientTypeEnum.ClientLedgerExt:
           // Setup signer
           _wallet = new LedgerSigner(wallet.transport, {
             hdPaths: [makeCosmoshubPath(0)],
