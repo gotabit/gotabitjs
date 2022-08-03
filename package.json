@@ -35,9 +35,9 @@
     "@cosmjs/math": "^0.28.11",
     "@cosmjs/utils": "^0.28.11",
     "@gotabit/cosmjs-amino": "^0.28.11",
-    "@gotabit/cosmjs-cosmwasm-stargate": "^0.28.11-1",
+    "@gotabit/cosmjs-cosmwasm-stargate": "^0.28.12",
     "@gotabit/cosmjs-proto-signing": "^0.28.11",
-    "@gotabit/cosmjs-stargate": "^0.28.11-1",
+    "@gotabit/cosmjs-stargate": "^0.28.12",
     "@ledgerhq/hw-transport": "^6.27.2",
     "eciesjs": "^0.3.15"
   },

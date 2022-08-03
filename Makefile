@@ -1,4 +1,4 @@
-all: init build
+all: init build pack
 
 init:
 	@echo "Install dependencies"
