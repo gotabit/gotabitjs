@@ -1,10 +1,19 @@
 import { HdPath } from "@cosmjs/crypto";
-import { GasPrice } from "@cosmjs/stargate";
+import { LedgerSigner } from "@cosmjs/ledger-amino";
+import { DirectSecp256k1HdWallet, OfflineDirectSigner, OfflineSigner } from "@gotabit/cosmjs-proto-signing";
+import { GasPrice } from "@gotabit/cosmjs-stargate";
 
 /**
- * Declare the chainConfig interface
+ * GotaBit class chainConfig/config supports specific types
  */
-export interface Config {
+export type ConfigType = "local" | "test" | "main";
+
+/**
+ * GotaBit class chainConfig/config field detail type
+ *
+ * For field meanings, please refer to: `https://docs.keplr.app/api/suggest-chain.html`
+ */
+export interface GotaBitConfig {
   rpc: string;
   chainId: string;
   gasPrices: GasPrice | string;
@@ -25,12 +34,26 @@ export interface Config {
 }
 
 /**
- * Different environment chainConfig type
+ * GotaBit class Wallet support types
  */
-export type ConfigType = "local" | "test" | "main";
+export type GotaBitWallet =
+  | DirectSecp256k1HdWallet
+  | LedgerSigner
+  | OfflineSigner
+  | OfflineDirectSigner
+  | null;
 
 /**
- * Different environment chainConfig enumerations
+ * Declare the GotaBitWalletOptoions interface
+ */
+export interface GotaBitWalletOptoions {
+  bip39Password: string;
+  hdPaths: HdPath[];
+  prefix: string;
+}
+
+/**
+ * GotaBit class chainConfig/config supports specific type enumeration values
  */
 export enum ConfigTypelEnum {
   /** Local Environment */
@@ -42,9 +65,9 @@ export enum ConfigTypelEnum {
 }
 
 /**
- * Declare the Wallet interface
+ * Interface declaration when initializing Wallet as an object
  */
-export interface Wallet {
+export interface WalletObject {
   type: WalletType;
   key: string;
   password: string;
@@ -52,23 +75,14 @@ export interface Wallet {
 }
 
 /**
- * Union type for different possible wallet.
- */
-export type WalletType = "password" | "keplr" | "ledger" | "ledger-ext";
-
-/**
- * Declare the WalletOptoions interface
- */
-export interface WalletOptoions {
-  bip39Password: string;
-  hdPaths: HdPath[];
-  prefix: string;
-}
-
-/**
  * The number of words in the mnemonic (12, 15, 18, 21 or 24).
  */
 export type WalletGenerateLength = 12 | 15 | 18 | 21 | 24;
+
+/**
+ * Union type for different possible wallet.
+ */
+export type WalletType = "password" | "keplr" | "ledger" | "ledger-ext";
 
 /**
  * Different environment ClientTypeEnum enumerations

@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const TerserPlugin = require("terser-webpack-plugin");
 
 const commonConfig = {
   mode: "production",
@@ -53,6 +53,20 @@ const webConfig = {
       process: "process/browser",
     }),
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          format: {
+            preamble: `/* Copyright ${new Date().getUTCFullYear()}, GotaBit Limited. ${
+              require("./package.json").name
+            } ${require("./package.json").version} (${new Date().toUTCString()}) */`,
+          },
+        },
+      }),
+    ],
+  },
 };
 
 module.exports = [webConfig];

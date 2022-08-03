@@ -7,7 +7,7 @@ export { GotaBit } from "./helpers/gotabit";
 export { Buffer } from "buffer";
 export { decrypt, encrypt, PrivateKey } from "eciesjs";
 
-// @cosmjs/amino
+// @gotabit/cosmjs-amino
 export {
   AccountData,
   Algo,
@@ -46,9 +46,9 @@ export {
   StdSignature,
   StdSignDoc,
   StdTx,
-} from "@cosmjs/amino";
+} from "@gotabit/cosmjs-amino";
 
-// @cosmjs/cosmwasm-stargate
+// @gotabit/cosmjs-cosmwasm-stargate
 export {
   ChangeAdminResult,
   CodeDetails,
@@ -66,7 +66,7 @@ export {
   toBinary,
   UploadResult,
   WasmExtension,
-} from "@cosmjs/cosmwasm-stargate";
+} from "@gotabit/cosmjs-cosmwasm-stargate";
 
 // @cosmjs/crypto
 export { Bip39, HdPath, pathToString, Random, stringToPath } from "@cosmjs/crypto";
@@ -93,10 +93,15 @@ export { LedgerSigner } from "@cosmjs/ledger-amino";
 // @cosmjs/math
 export { Decimal } from "@cosmjs/math";
 
-// @cosmjs/proto-signing
-export { DirectSecp256k1HdWallet, OfflineDirectSigner, OfflineSigner, Registry } from "@cosmjs/proto-signing";
+// @gotabit/cosmjs-proto-signing
+export {
+  DirectSecp256k1HdWallet,
+  OfflineDirectSigner,
+  OfflineSigner,
+  Registry,
+} from "@gotabit/cosmjs-proto-signing";
 
-// @cosmjs/stargate
+// @gotabit/cosmjs-stargate
 export {
   AuthExtension,
   BankExtension,
@@ -125,7 +130,7 @@ export {
   StargateClient,
   StargateClientOptions,
   TxExtension,
-} from "@cosmjs/stargate";
+} from "@gotabit/cosmjs-stargate";
 
 // @cosmjs/utils
 export { isNonNullObject } from "@cosmjs/utils";
