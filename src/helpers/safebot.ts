@@ -7,8 +7,8 @@ import {
   Xchacha20poly1305Ietf,
 } from "@cosmjs/crypto";
 import { toAscii, toUtf8 } from "@cosmjs/encoding";
-import { decrypt, encrypt, PrivateKey } from "eciesjs";
 import { Buffer } from "buffer";
+import { decrypt, encrypt, PrivateKey } from "eciesjs";
 
 const safeBotSalt = toAscii("The SafeBot salt");
 
