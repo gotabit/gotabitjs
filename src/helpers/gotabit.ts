@@ -13,6 +13,7 @@ import {
   ConfigTypelEnum,
   GotaBitConfig,
   GotaBitWallet,
+  GotaBitInitWalletOptoions,
   GotaBitWalletOptoions,
   WalletGenerateLength,
   WalletObject,
@@ -111,7 +112,7 @@ export class GotaBit {
   public static async init(
     chainConfig: ConfigType | GotaBitConfig,
     wallet?: string | WalletGenerateLength | WalletObject | null,
-    option?: Partial<GotaBitWalletOptoions> | null,
+    option?: Partial<GotaBitInitWalletOptoions> | null,
   ): Promise<GotaBit> {
     const config = this.getChainConfig(chainConfig);
     const _options = this.getOptions(option);
@@ -225,13 +226,13 @@ export class GotaBit {
    * @param option
    * @returns
    */
-  private static getOptions(option?: Partial<GotaBitWalletOptoions> | null): GotaBitWalletOptoions {
+   private static getOptions(option?: Partial<GotaBitInitWalletOptoions> | null): GotaBitWalletOptoions {
     const mainWalletOptoions: GotaBitWalletOptoions = {
-      bip39Password: "",
-      hdPaths: [stringToPath(defaultHdPath)],
-      prefix: defaultPrefix,
+      bip39Password: option?.bip39Password || "",
+      hdPaths: [stringToPath(option?.hdPaths || defaultHdPath)],
+      prefix: option?.prefix || defaultPrefix,
     };
-    return Object.assign(mainWalletOptoions, option);
+    return mainWalletOptoions;
   }
 
   private static async keplrSuggest(config: GotaBitConfig, option: GotaBitWalletOptoions): Promise<void> {

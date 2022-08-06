@@ -53,6 +53,15 @@ export interface GotaBitWalletOptoions {
 }
 
 /**
+ * Declare the GotaBitInitWalletOptoions interface
+ */
+ export interface GotaBitInitWalletOptoions {
+  bip39Password: string;
+  hdPaths: string;
+  prefix: string;
+}
+
+/**
  * GotaBit class chainConfig/config supports specific type enumeration values
  */
 export enum ConfigTypelEnum {

@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 
-import { stringToPath, GotaBit } from "gotabit";
+import { GotaBit } from "gotabit";
 import { toUtf8, fromUtf8 } from "@cosmjs/encoding";
-import { SafeBotEcies, SafeBotSecret, safeBotSha256 } from "gotabit";
+import { SafeBotEcies, SafeBotSecret, safeBotSha256, safeBotSha1 } from "gotabit";
 
 const text = toUtf8('This a plain text.');
 
 /* 
 * safeBotSha256 test
 */
-//8dd5af8c39da483368e796cf0192f4af94b20baf857ffd072336373f240ba151
+// 78a70afeb2201b1ccdf0e67ec539e8814ce1125d96522e999c2bda67dde417c2
 let digest = safeBotSha256(text);
-
 console.log('sha256-digest:', digest);
+
+/* 
+* safeBotSha1 test
+*/
+// 78a70afeb2201b1ccdf0e67ec539e8814ce1125d96522e999c2bda67dde417c2
+digest = safeBotSha1(text);
+console.log('sha1-digest:', digest);
 
 /* 
 * SafeBotSecret test
@@ -30,7 +36,7 @@ console.log('secret-plaintext:', fromUtf8(plaintext));
 // generate key pair for ecies
 const gotabit = await GotaBit.init('test', 12, {
   prefix: "gid",
-  hdPaths: [stringToPath('m/199')]
+  hdPaths: 'm/199'
 });
 
 const [{ address, pubkey, privkey }] = await gotabit.wallet.getAccountsWithPrivkeys();
