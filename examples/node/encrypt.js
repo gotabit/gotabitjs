@@ -2,24 +2,26 @@
 
 import { GotaBit } from "gotabit";
 import { toUtf8, fromUtf8 } from "@cosmjs/encoding";
-import { SafeBotEcies, SafeBotSecret, safeBotSha256, safeBotSha1 } from "gotabit";
+import { SafeBotEcies, SafeBotSecret, safeBotSha256, safeBotSha1, SafeBotSimple } from "gotabit";
 
-const text = toUtf8('This a plain text.');
+const text = toUtf8('id:1,000,000');
 
 /* 
 * safeBotSha256 test
 */
-// 78a70afeb2201b1ccdf0e67ec539e8814ce1125d96522e999c2bda67dde417c2
+console.log("### SafeBot sha256 sha1");
+// b4f52dccb3828c29ece216465b8c20372193ce27d248a811a6ddcbc7f249300e
 let digest = safeBotSha256(text);
 console.log('sha256-digest:', digest);
 
 /* 
 * safeBotSha1 test
 */
-// 44d979c869b80069aeed76f3a8c802fff9785211
+// 75a81e41adc5e24677b747bf14ff70d642e12149
 digest = safeBotSha1(text);
 console.log('sha1-digest:', digest);
 
+console.log("\n### SafeBot Secret-key SafeBotSecret SafeBotSimple");
 /* 
 * SafeBotSecret test
 */
@@ -30,9 +32,18 @@ console.log('secret-encrypted:', Buffer.from(encrypted).toString('base64'));
 console.log('secret-plaintext:', fromUtf8(plaintext));
 
 /* 
+* SafeBotSimple test
+*/
+encrypted =  await SafeBotSimple.encrypt(text, '123456');
+plaintext =  await SafeBotSimple.decrypt(encrypted, '123456');
+
+console.log('simple-encrypted:', Buffer.from(encrypted).toString('base64'));
+console.log('simple-plaintext:', fromUtf8(plaintext));
+
+/* 
 * SafeBotEcies test
 */
-
+console.log("\n### SafeBot Public-key ECIES");
 // generate key pair for ecies
 const gotabit = await GotaBit.init('test', 12, {
   prefix: "gid",
@@ -46,8 +57,8 @@ console.log("pubkey: ", Buffer.from(pubkey).toString("hex"));
 console.log("privkey: ", Buffer.from(privkey).toString("hex"));
 
 // SafeBotEcies test
-encrypted =  await SafeBotEcies.encrypt(text, pubkey);
-plaintext =  await SafeBotEcies.decrypt(encrypted, privkey);
+encrypted =  SafeBotEcies.encrypt(text, pubkey);
+plaintext =  SafeBotEcies.decrypt(encrypted, privkey);
 
 console.log('ecies-encrypted:', encrypted.toString('base64'));
 console.log('ecies-plaintext:', fromUtf8(plaintext));
