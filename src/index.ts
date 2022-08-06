@@ -4,8 +4,8 @@
 
 // Helpers
 export { GotaBit } from "./helpers/gotabit";
+export { SafeBotEcies, SafeBotSecret, safeBotSha256 } from "./helpers/safebot";
 export { Buffer } from "buffer";
-export { decrypt, encrypt, PrivateKey } from "eciesjs";
 
 // @gotabit/cosmjs-amino
 export {
@@ -69,7 +69,17 @@ export {
 } from "@gotabit/cosmjs-cosmwasm-stargate";
 
 // @cosmjs/crypto
-export { Bip39, HdPath, pathToString, Random, stringToPath } from "@cosmjs/crypto";
+export {
+  Bip39,
+  Ed25519,
+  HdPath,
+  pathToString,
+  Random,
+  sha256,
+  sha512,
+  stringToPath,
+  Xchacha20poly1305Ietf,
+} from "@cosmjs/crypto";
 export {
   Bech32,
   fromAscii,

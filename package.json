@@ -1,6 +1,6 @@
 {
   "name": "gotabit",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A wrapper package for all relevant cosmjs packages.",
   "main": "build/index.js",
   "scripts": {

@@ -226,12 +226,12 @@ export class GotaBit {
    * @returns
    */
   private static getOptions(option?: Partial<GotaBitWalletOptoions> | null): GotaBitWalletOptoions {
-    const mainWalletOptoions = {
+    const mainWalletOptoions: GotaBitWalletOptoions = {
       bip39Password: "",
       hdPaths: [stringToPath(defaultHdPath)],
       prefix: defaultPrefix,
     };
-    return option === null ? Object.assign(mainWalletOptoions, { option }) : mainWalletOptoions;
+    return Object.assign(mainWalletOptoions, option);
   }
 
   private static async keplrSuggest(config: GotaBitConfig, option: GotaBitWalletOptoions): Promise<void> {
