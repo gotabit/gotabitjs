@@ -55,7 +55,7 @@ export interface GotaBitWalletOptoions {
 /**
  * Declare the GotaBitInitWalletOptoions interface
  */
- export interface GotaBitInitWalletOptoions {
+export interface GotaBitInitWalletOptoions {
   bip39Password: string;
   hdPaths: string;
   prefix: string;

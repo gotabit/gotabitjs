@@ -5,11 +5,11 @@ import {
   xchacha20NonceLength,
   Xchacha20poly1305Ietf,
 } from "@cosmjs/crypto";
-import { toAscii, toUtf8 } from "@cosmjs/encoding";
+import { toAscii } from "@cosmjs/encoding";
+import { sha1 } from "@noble/hashes/sha1";
+import { sha256 } from "@noble/hashes/sha256";
 import { Buffer } from "buffer";
 import { decrypt, encrypt, PrivateKey } from "eciesjs";
-import { sha256 } from '@noble/hashes/sha256';
-import { sha1 } from '@noble/hashes/sha1';
 
 const safeBotSalt = toAscii("The SafeBot salt");
 

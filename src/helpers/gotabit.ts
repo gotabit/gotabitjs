@@ -12,8 +12,8 @@ import {
   ConfigType,
   ConfigTypelEnum,
   GotaBitConfig,
-  GotaBitWallet,
   GotaBitInitWalletOptoions,
+  GotaBitWallet,
   GotaBitWalletOptoions,
   WalletGenerateLength,
   WalletObject,
@@ -226,7 +226,7 @@ export class GotaBit {
    * @param option
    * @returns
    */
-   private static getOptions(option?: Partial<GotaBitInitWalletOptoions> | null): GotaBitWalletOptoions {
+  private static getOptions(option?: Partial<GotaBitInitWalletOptoions> | null): GotaBitWalletOptoions {
     const mainWalletOptoions: GotaBitWalletOptoions = {
       bip39Password: option?.bip39Password || "",
       hdPaths: [stringToPath(option?.hdPaths || defaultHdPath)],

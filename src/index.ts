@@ -4,7 +4,7 @@
 
 // Helpers
 export { GotaBit } from "./helpers/gotabit";
-export { SafeBotEcies, SafeBotSecret, safeBotSha256, safeBotSha1 } from "./helpers/safebot";
+export { SafeBotEcies, SafeBotSecret, safeBotSha1, safeBotSha256 } from "./helpers/safebot";
 export { Buffer } from "buffer";
 
 // @gotabit/cosmjs-amino
