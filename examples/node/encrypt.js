@@ -16,7 +16,7 @@ console.log('sha256-digest:', digest);
 /* 
 * safeBotSha1 test
 */
-// 78a70afeb2201b1ccdf0e67ec539e8814ce1125d96522e999c2bda67dde417c2
+// 44d979c869b80069aeed76f3a8c802fff9785211
 digest = safeBotSha1(text);
 console.log('sha1-digest:', digest);
 
