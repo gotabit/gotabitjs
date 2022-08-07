@@ -295,6 +295,7 @@ export class GotaBit {
           average,
           high,
         },
+        features: ["ibc-transfer", "cosmwasm", "ibc-go"],
       })
       .catch(() => {
         throw new Error("Keplr can't experimentalSuggestChain to this chainId!");
