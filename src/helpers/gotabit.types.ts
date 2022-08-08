@@ -78,9 +78,9 @@ export enum ConfigTypelEnum {
  */
 export interface WalletObject {
   type: WalletType;
-  key: string;
-  password: string;
-  transport: any;
+  key?: string;
+  password?: string;
+  transport?: any;
 }
 
 /**

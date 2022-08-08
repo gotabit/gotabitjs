@@ -184,11 +184,11 @@ export class GotaBit {
       const { type } = wallet;
       switch (type) {
         case ClientTypeEnum.ClientPassword:
-          if (!wallet?.key && !wallet?.password) {
+          if (wallet?.key && wallet?.password) {
+            _wallet = await DirectSecp256k1HdWallet.deserialize(wallet.key, wallet.password);
+          } else {
             throw new Error("Wallet key and wallet password cannot be empty!");
           }
-          _wallet = await DirectSecp256k1HdWallet.deserialize(wallet.key, wallet.password);
-
           break;
         case ClientTypeEnum.ClientKeplr:
           if (!window.keplr) {
