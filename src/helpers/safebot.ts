@@ -30,6 +30,7 @@ export function safeBotSha1(plaintext: string | Uint8Array): string {
   return Buffer.from(sha1(plaintext)).toString("hex");
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export class SafeBotXChaCha20 {
   public static async encrypt(plaintext: Uint8Array, password: string): Promise<Uint8Array> {
     const encryptionKey = await Argon2id.execute(password, safeBotSalt, argon2idOptions);
