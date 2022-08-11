@@ -30,7 +30,7 @@ export function safeBotSha1(plaintext: string | Uint8Array): string {
   return Buffer.from(sha1(plaintext)).toString("hex");
 }
 
-export class SafeBotSecret {
+export class SafeBotXChaCha20 {
   public static async encrypt(plaintext: Uint8Array, password: string): Promise<Uint8Array> {
     const encryptionKey = await Argon2id.execute(password, safeBotSalt, argon2idOptions);
 
@@ -49,7 +49,7 @@ export class SafeBotSecret {
   }
 }
 
-export class SafeBotSimple {
+export class SafeBotChaCha20 {
   public static async encrypt(plaintext: Uint8Array, password: string): Promise<Uint8Array> {
     const encryptionKey = await Argon2id.execute(password, safeBotSalt, argon2idOptions);
 

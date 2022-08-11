@@ -1,6 +1,6 @@
 {
   "name": "gotabit",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Javascript SDK for GotaBit Chain",
   "main": "build/index.js",
   "scripts": {
