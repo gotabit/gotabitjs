@@ -11,6 +11,22 @@ export {
   safeBotSha256,
   SafeBotXChaCha20,
 } from "./helpers/safebot";
+export {
+  Bech32,
+  fromAscii,
+  fromBase64,
+  fromBech32,
+  fromHex,
+  fromRfc3339,
+  fromUtf8,
+  normalizeBech32,
+  toAscii,
+  toBase64,
+  toBech32,
+  toHex,
+  toRfc3339,
+  toUtf8,
+} from "@cosmjs/encoding";
 export { Buffer } from "buffer";
 
 // @gotabit/cosmjs-amino
@@ -74,7 +90,7 @@ export {
   WasmExtension,
 } from "@gotabit/cosmjs-cosmwasm-stargate";
 
-// @cosmjs/crypto
+// @gotabit/cosmjs-crypto
 export {
   Bip39,
   Ed25519,
@@ -85,23 +101,7 @@ export {
   sha512,
   stringToPath,
   Xchacha20poly1305Ietf,
-} from "@cosmjs/crypto";
-export {
-  Bech32,
-  fromAscii,
-  fromBase64,
-  fromBech32,
-  fromHex,
-  fromRfc3339,
-  fromUtf8,
-  normalizeBech32,
-  toAscii,
-  toBase64,
-  toBech32,
-  toHex,
-  toRfc3339,
-  toUtf8,
-} from "@cosmjs/encoding";
+} from "@gotabit/cosmjs-crypto";
 
 // @cosmjs/ledger-amino
 export { LedgerSigner } from "@cosmjs/ledger-amino";

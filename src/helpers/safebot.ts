@@ -1,11 +1,11 @@
+import { toAscii } from "@cosmjs/encoding";
 import {
   Argon2id,
   Argon2idOptions,
   Random,
   xchacha20NonceLength,
   Xchacha20poly1305Ietf,
-} from "@cosmjs/crypto";
-import { toAscii } from "@cosmjs/encoding";
+} from "@gotabit/cosmjs-crypto";
 import { sha1 } from "@noble/hashes/sha1";
 import { sha256 } from "@noble/hashes/sha256";
 import { Buffer } from "buffer";

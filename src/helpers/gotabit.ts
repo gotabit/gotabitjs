@@ -1,8 +1,8 @@
-import { Random, stringToPath } from "@cosmjs/crypto";
 import { toBech32 } from "@cosmjs/encoding";
 import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { makeCosmoshubPath } from "@gotabit/cosmjs-amino";
 import { CosmWasmClient, SigningCosmWasmClient } from "@gotabit/cosmjs-cosmwasm-stargate";
+import { Random, stringToPath } from "@gotabit/cosmjs-crypto";
 import { DirectSecp256k1HdWallet } from "@gotabit/cosmjs-proto-signing";
 import { GasPrice, SigningStargateClient, StargateClient } from "@gotabit/cosmjs-stargate";
 import { Window as KeplrWindow } from "@keplr-wallet/types";

@@ -1,5 +1,5 @@
-import { HdPath } from "@cosmjs/crypto";
 import { LedgerSigner } from "@cosmjs/ledger-amino";
+import { HdPath } from "@gotabit/cosmjs-crypto";
 import { DirectSecp256k1HdWallet, OfflineDirectSigner, OfflineSigner } from "@gotabit/cosmjs-proto-signing";
 import { GasPrice } from "@gotabit/cosmjs-stargate";
 
