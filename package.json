@@ -1,6 +1,6 @@
 {
   "name": "gotabit",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Javascript SDK for GotaBit Chain",
   "main": "build/index.js",
   "scripts": {
@@ -29,15 +29,15 @@
   },
   "homepage": "https://github.com/gotabit/gotabitjs",
   "dependencies": {
-    "@cosmjs/crypto": "^0.28.11",
     "@cosmjs/encoding": "^0.28.11",
     "@cosmjs/ledger-amino": "^0.28.11",
     "@cosmjs/math": "^0.28.11",
     "@cosmjs/utils": "^0.28.11",
-    "@gotabit/cosmjs-amino": "^0.28.11",
-    "@gotabit/cosmjs-cosmwasm-stargate": "^0.28.12",
-    "@gotabit/cosmjs-proto-signing": "^0.28.11",
-    "@gotabit/cosmjs-stargate": "^0.28.12",
+    "@gotabit/cosmjs-amino": "^0.28.14",
+    "@gotabit/cosmjs-cosmwasm-stargate": "^0.28.14",
+    "@gotabit/cosmjs-crypto": "^0.28.14",
+    "@gotabit/cosmjs-proto-signing": "^0.28.14",
+    "@gotabit/cosmjs-stargate": "^0.28.14",
     "@ledgerhq/hw-transport": "^6.27.2",
     "@noble/hashes": "^1.1.2",
     "eciesjs": "^0.3.15",
