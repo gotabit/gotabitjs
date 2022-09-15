@@ -1,0 +1,33 @@
+{
+  "name": "exampl",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "better-sqlite3": "^7.6.2",
+    "gotabit": "file:../../build",
+    "next": "12.3.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@ledgerhq/hw-transport": "^6.27.2",
+    "@noble/hashes": "^1.1.2",
+    "@types/node": "18.7.18",
+    "@types/react": "18.0.20",
+    "@types/react-dom": "18.0.6",
+    "@walletconnect/encoding": "^1.0.1",
+    "@walletconnect/qrcode-modal": "^1.7.8",
+    "@walletconnect/sign-client": "2.0.0-rc.2",
+    "@walletconnect/types": "2.0.0-rc.2",
+    "@walletconnect/utils": "2.0.0-rc.2",
+    "eslint": "8.23.1",
+    "eslint-config-next": "12.3.0",
+    "typescript": "4.8.3"
+  }
+}
