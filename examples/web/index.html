@@ -7,7 +7,9 @@
       name="description"
       content="Web site created using create-snowpack-app"
     />
-    <script crossorigin src="../../dist/bundle.js"></script>
+    <script crossorigin src="/dist/bundle.js"></script>
+    <script crossorigin src="https://unpkg.com/flatted@3.2.7/min.js"></script>
+    
     <style>
       section {
         width: 800px;
@@ -33,7 +35,9 @@
         <li>Click the buttons below</li>
       </ol>
       <button
-        onclick="connectWallet('ledger').then((gotabit) => {window.gotabit = gotabit;})"
+        onclick="connectWallet({
+          type: 'ledger',
+        }).then((gotabit) => {window.gotabit = gotabit;})"
       >
         ledgerConnect
       </button>
@@ -43,9 +47,31 @@
         <li>Click the buttons below</li>
       </ol>
       <button
-        onclick="connectWallet('keplr').then((gotabit) => {window.gotabit = gotabit; })"
+        onclick="connectWallet({
+          type: 'keplr',
+        }).then((gotabit) => {window.gotabit = gotabit; })"
       >
         KeplrConnect
+      </button>
+      <button
+        onclick="connectWallet({
+          type: 'walletconnect',
+          walletconnectParams: {
+            signOpts: {
+              logger: 'debug',
+              relayUrl: 'wss:\/\/relay.gotabit.dev',
+              projectId: '2c921904d8ebc91517cd11c1cc4a267f',
+              metadata: {
+                name: 'Gotabit SDK WalletConnect test',
+                description: 'Gotabit SDK WalletConnect test',
+                url: 'https:\/\/sdk.gotabit.dev',
+                icons: [`https:\/\/res.gotabit.io\/svg\/icon.svg`],
+              },
+            }
+          }
+        }, 'test').then((gotabit) => {window.gotabit = gotabit; })"
+      >
+        Walletconnect
       </button>
       <hr />
       <div id="connect">Connect Result:</div>
@@ -56,20 +82,18 @@
     </section>
     <script>
       window.addEventListener("load", (event) => {
-        const { GotaBit } = GotaBitJS;
+        const { GotaBit, Buffer } = GotaBitJS;
 
-        window.connectWallet = async function (type) {
+        window.connectWallet = async function (walletType, chain = 'main') {
           const connectDiv = document.getElementById("connect");
           connectDiv.textContent = "Loading...";
           let gotabit;
           try {
-            const wallet = {
-              type: type,
-            };
-            gotabit = await GotaBit.init("main", wallet);
+            gotabit = await GotaBit.init(chain, walletType);
 
-            connectDiv.textContent = JSON.stringify(gotabit, 2, "\n");
+            connectDiv.textContent = gotabit.wallet.chainId;
           } catch (error) {
+
             console.error(error);
             connectDiv.textContent = error;
           }
@@ -79,11 +103,17 @@
 
         window.getAccounts = async function (gotabit) {
           const accountsDiv = document.getElementById("accounts");
+
           accountsDiv.textContent = "Loading...";
 
           try {
             accounts = await gotabit.wallet.getAccounts();
-            accountsDiv.textContent = JSON.stringify(accounts, 2, "\n");
+
+            let [{ address, algo, pubkey }] = await gotabit.wallet.getAccounts();
+
+            pubkey = Buffer.from(pubkey).toString("hex")
+
+            accountsDiv.innerHTML = "address: " + address + "<br>algo: " + algo + "<br>pubkey: " + pubkey;
           } catch (error) {
             console.error(error);
             accountsDiv.textContent = error;

@@ -14,10 +14,12 @@ import {
   GotaBitConfig,
   GotaBitInitWalletOptoions,
   GotaBitWallet,
-  GotaBitWalletOptoions,
+  GotaBitWalletOptions,
   WalletGenerateLength,
   WalletObject,
+  WalletType,
 } from "./gotabit.types";
+import { WalletconnectSigner } from "./walletconnect";
 
 /**
  * Redeclare the window type, inheriting from the KeplrWindow type
@@ -79,20 +81,23 @@ const defaultGasPrice = "0.0025ugtb";
 
 export class GotaBit {
   public wallet: GotaBitWallet;
-  public walletOptoions: GotaBitWalletOptoions;
+  public walletOptions: GotaBitWalletOptions;
   public mnemonic: string;
   public config: GotaBitConfig;
+  public walletType: WalletType;
 
   private constructor(
     config: GotaBitConfig,
     wallet: GotaBitWallet,
     mnemonic: string,
-    walletOptoions: GotaBitWalletOptoions,
+    walletOptions: GotaBitWalletOptions,
+    walletType: WalletType,
   ) {
     this.mnemonic = mnemonic;
     this.config = config;
     this.wallet = wallet;
-    this.walletOptoions = walletOptoions;
+    this.walletOptions = walletOptions;
+    this.walletType = walletType;
   }
 
   /**
@@ -120,7 +125,9 @@ export class GotaBit {
 
     const mnemonic = typeof wallet === "string" ? wallet : "";
 
-    return new GotaBit(config, _wallet, mnemonic, _options);
+    const walletType = typeof wallet === "object" && wallet !== null ? wallet.type : "password";
+
+    return new GotaBit(config, _wallet, mnemonic, _options, walletType);
   }
 
   /**
@@ -170,7 +177,7 @@ export class GotaBit {
    */
   private static async getWallet(
     config: GotaBitConfig,
-    option: GotaBitWalletOptoions,
+    option: GotaBitWalletOptions,
     wallet?: string | WalletGenerateLength | WalletObject | null,
   ): Promise<GotaBitWallet> {
     const { prefix } = option;
@@ -179,9 +186,14 @@ export class GotaBit {
     if (typeof wallet === "number") {
       _wallet = await DirectSecp256k1HdWallet.generate(wallet, option);
     } else if (typeof wallet === "string") {
-      _wallet = await DirectSecp256k1HdWallet.fromMnemonic(wallet, option);
+      try {
+        _wallet = await DirectSecp256k1HdWallet.fromMnemonic(wallet, option);
+      } catch (error) {
+        throw Error("Invalid mnemonic");
+      }
     } else if (typeof wallet === "object" && wallet) {
       const { type } = wallet;
+
       switch (type) {
         case ClientTypeEnum.ClientPassword:
           if (wallet?.key && wallet?.data) {
@@ -214,7 +226,14 @@ export class GotaBit {
             prefix,
           });
           break;
-
+        case ClientTypeEnum.ClientWalletconnect:
+          if (!wallet?.walletconnectParams) throw new Error("The Walletconnect init params is required!");
+          _wallet = await WalletconnectSigner.getOfflineSignerAuto(
+            config.chainId,
+            wallet.walletconnectParams.signOpts,
+            wallet.walletconnectParams?.settings,
+          );
+          break;
         default:
           break;
       }
@@ -227,8 +246,8 @@ export class GotaBit {
    * @param option
    * @returns
    */
-  private static getOptions(option?: Partial<GotaBitInitWalletOptoions> | null): GotaBitWalletOptoions {
-    const mainWalletOptoions: GotaBitWalletOptoions = {
+  private static getOptions(option?: Partial<GotaBitInitWalletOptoions> | null): GotaBitWalletOptions {
+    const mainWalletOptoions: GotaBitWalletOptions = {
       bip39Password: option?.bip39Password || "",
       hdPaths: [stringToPath(option?.hdPaths || defaultHdPath)],
       prefix: option?.prefix || defaultPrefix,
@@ -236,7 +255,7 @@ export class GotaBit {
     return mainWalletOptoions;
   }
 
-  private static async keplrSuggest(config: GotaBitConfig, option: GotaBitWalletOptoions): Promise<void> {
+  private static async keplrSuggest(config: GotaBitConfig, option: GotaBitWalletOptions): Promise<void> {
     const {
       chainId,
       chainName,
@@ -331,7 +350,7 @@ export class GotaBit {
         this.config.rpc,
         this.wallet,
         {
-          prefix: this.walletOptoions.prefix,
+          prefix: this.walletOptions.prefix,
           gasPrice: this.config.gasPrices,
         },
       );
@@ -360,7 +379,7 @@ export class GotaBit {
         this.config.rpc,
         this.wallet,
         {
-          prefix: this.walletOptoions.prefix,
+          prefix: this.walletOptions.prefix,
           gasPrice: this.config.gasPrices,
         },
       );

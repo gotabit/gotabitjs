@@ -11,6 +11,7 @@ export {
   safeBotSha256,
   SafeBotXChaCha20,
 } from "./helpers/safebot";
+export { COSMOS_METHODS, WalletconnectSigner } from "./helpers/walletconnect";
 export {
   Bech32,
   fromAscii,

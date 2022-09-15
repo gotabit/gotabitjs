@@ -2,6 +2,9 @@ import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { HdPath } from "@gotabit/cosmjs-crypto";
 import { DirectSecp256k1HdWallet, OfflineDirectSigner, OfflineSigner } from "@gotabit/cosmjs-proto-signing";
 import { GasPrice } from "@gotabit/cosmjs-stargate";
+import { SessionTypes, SignClientTypes } from "@walletconnect/types";
+
+import { IQRCodeModalOptions } from "./walletconnect";
 
 /**
  * GotaBit class chainConfig/config supports specific types
@@ -44,9 +47,9 @@ export type GotaBitWallet =
   | null;
 
 /**
- * Declare the GotaBitWalletOptoions interface
+ * Declare the GotaBitWalletOptions interface
  */
-export interface GotaBitWalletOptoions {
+export interface GotaBitWalletOptions {
   bip39Password: string;
   hdPaths: HdPath[];
   prefix: string;
@@ -81,6 +84,16 @@ export interface WalletObject {
   key?: string;
   data?: string;
   transport?: any;
+  walletconnectParams?: {
+    signOpts: SignClientTypes.Options;
+    settings?: {
+      qrcodeModal?: {
+        onClosed?: (...args: any[]) => void;
+        options?: IQRCodeModalOptions;
+      };
+      onConnected?: (session: SessionTypes.Struct) => void;
+    };
+  };
 }
 
 /**
@@ -91,7 +104,7 @@ export type WalletGenerateLength = 12 | 15 | 18 | 21 | 24;
 /**
  * Union type for different possible wallet.
  */
-export type WalletType = "password" | "keplr" | "ledger";
+export type WalletType = "password" | "keplr" | "ledger" | "walletconnect";
 
 /**
  * Different environment ClientTypeEnum enumerations
@@ -100,4 +113,5 @@ export enum ClientTypeEnum {
   ClientPassword = "password",
   ClientKeplr = "keplr",
   ClientLedger = "ledger",
+  ClientWalletconnect = "walletconnect",
 }

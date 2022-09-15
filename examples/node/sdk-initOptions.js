@@ -8,7 +8,7 @@ const gotabit = await GotaBit.init('test', 12, {
 });
 
 console.log(gotabit);
-console.log(gotabit.walletOptoions);
+console.log(gotabit.walletOptions);
 
 // const [{ address }] = await gotabit.wallet.getAccounts();
 
