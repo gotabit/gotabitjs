@@ -29,7 +29,6 @@ export {
   toUtf8,
 } from "@cosmjs/encoding";
 export { Buffer } from "buffer";
-export { verifyDirectSignature, verifySignature } from "cosmos-wallet";
 
 // @gotabit/cosmjs-amino
 export {
@@ -51,7 +50,7 @@ export {
   isSinglePubkey,
   isStdTx,
   makeCosmoshubPath,
-  makeSignDoc,
+  makeSignDoc as makeSignDocAmino,
   makeStdTx,
   OfflineAminoSigner,
   parseCoins,
@@ -99,6 +98,7 @@ export {
   HdPath,
   pathToString,
   Random,
+  Secp256k1,
   sha256,
   sha512,
   stringToPath,
@@ -115,6 +115,7 @@ export { Decimal } from "@cosmjs/math";
 export {
   DirectSecp256k1HdWallet,
   makeAuthInfoBytes,
+  makeSignDoc,
   OfflineDirectSigner,
   OfflineSigner,
   Registry,
