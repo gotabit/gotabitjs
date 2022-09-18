@@ -29,6 +29,7 @@ export {
   toUtf8,
 } from "@cosmjs/encoding";
 export { Buffer } from "buffer";
+export { verifyDirectSignature, verifySignature } from "cosmos-wallet";
 
 // @gotabit/cosmjs-amino
 export {
@@ -113,6 +114,7 @@ export { Decimal } from "@cosmjs/math";
 // @gotabit/cosmjs-proto-signing
 export {
   DirectSecp256k1HdWallet,
+  makeAuthInfoBytes,
   OfflineDirectSigner,
   OfflineSigner,
   Registry,

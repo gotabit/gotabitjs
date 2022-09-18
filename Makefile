@@ -5,11 +5,9 @@ init:
 	npm i
 
 lint:
-	@echo "Install dependencies"
 	npm run lint
 
 lint-fix:
-	@echo "Install dependencies"
 	npm run lint -- --fix
 
 build: 
