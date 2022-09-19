@@ -99,6 +99,7 @@ export {
   pathToString,
   Random,
   Secp256k1,
+  Secp256k1Signature,
   sha256,
   sha512,
   stringToPath,
